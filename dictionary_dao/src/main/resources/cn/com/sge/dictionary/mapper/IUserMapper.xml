@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.sge.dictionary.mapper.IUserMapper">
+    <resultMap id="User" type="cn.com.sge.dictionary.mapper.pojo.UserPojo">
+        <result column="T_TR_ID" jdbcType="VARCHAR" property="id"/>
+        <result column="T_TR_USERNAME" jdbcType="VARCHAR" property="username"/>
+        <result column="T_TR_PASSWORD" jdbcType="VARCHAR" property="password"/>
+    </resultMap>
+    <select id="getAllUser" resultMap="User">
+        select * from t_tr_org_user;
+    </select>
+</mapper>
