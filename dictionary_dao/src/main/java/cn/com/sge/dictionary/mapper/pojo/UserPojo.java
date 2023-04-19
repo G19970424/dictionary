@@ -14,6 +14,7 @@ public class UserPojo {
     private String id;
     private String username;
     private String password;
+    private int status;
 
     public String getId() {
         return id;
@@ -37,6 +38,14 @@ public class UserPojo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cn.com.sge.dictionary;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -10,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @MapperScan("cn.com.sge.dictionary.mapper")
-public class SpringApplication {
+public class Application {
     public static void main(String[] args) {
-        org.springframework.boot.SpringApplication.run(SpringApplication.class,args);
+        SpringApplication.run(Application.class,args);
     }
 }

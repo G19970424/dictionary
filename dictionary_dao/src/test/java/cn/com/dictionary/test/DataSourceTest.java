@@ -1,21 +1,16 @@
 package cn.com.dictionary.test;
 
-import cn.com.sge.dictionary.SpringApplication;
+import cn.com.sge.dictionary.Application;
 import cn.com.sge.dictionary.mapper.IUserMapper;
-import cn.com.sge.dictionary.mapper.pojo.UserPojo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * @author gejj
@@ -23,7 +18,7 @@ import java.util.UUID;
  * @data 2023/4/17 17:37
  */
 
-@SpringBootTest(classes = {SpringApplication.class})
+@SpringBootTest(classes = {Application.class})
 @RunWith(SpringRunner.class)
 public class DataSourceTest {
     @Autowired
@@ -40,10 +35,6 @@ public class DataSourceTest {
 
     @Test
     public void testDao(){
-
-        List<UserPojo> allUser = userMapper.getAllUser();
-        for (UserPojo pojo : allUser) {
-            System.out.println(pojo.toString());
-        }
+        userMapper.logout("admin", "admin");
     }
 }
