@@ -2,8 +2,8 @@ package cn.com.dictionary.config;
 
 import cn.com.dictionary.common.response.ApiResponse;
 import cn.com.dictionary.exception.BusinessException;
-import cn.com.sge.dictionary.utils.ErrorUtil;
-import cn.com.sge.dictionary.utils.enumdata.StatusEnum;
+import cn.com.dictionary.utils.ErrorUtil;
+import cn.com.dictionary.utils.enumdata.StatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,8 +36,8 @@ public class ExceptionHandlerConfig {
     public ApiResponse exceptionHandler(Exception e) {
         // 把错误信息输入到日志中
         logger.error(ErrorUtil.errorInfoToString(e));
-        return ApiResponse.error(StatusEnum.UNKNOWN.getCode(),
-                StatusEnum.UNKNOWN.getMsg());
+        return ApiResponse.error(StatusEnum.UNKNOWN.getValue(),
+                StatusEnum.UNKNOWN.getLabel());
     }
 
 
@@ -48,7 +48,7 @@ public class ExceptionHandlerConfig {
     @ResponseBody
     public ApiResponse exceptionHandler(NullPointerException e) {
         logger.error(ErrorUtil.errorInfoToString(e));
-        return ApiResponse.error(StatusEnum.INTERNAL_SERVER_ERROR.getCode(),
-                StatusEnum.INTERNAL_SERVER_ERROR.getMsg());
+        return ApiResponse.error(StatusEnum.INTERNAL_SERVER_ERROR.getValue(),
+                StatusEnum.INTERNAL_SERVER_ERROR.getLabel());
     }
 }

@@ -1,6 +1,6 @@
 package cn.com.dictionary.exception;
 
-import cn.com.sge.dictionary.utils.enumdata.StatusEnum;
+import cn.com.dictionary.utils.enumdata.StatusEnum;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
 
@@ -21,10 +21,10 @@ public class BusinessException extends RuntimeException{
     }
 
     public BusinessException(StatusEnum statusEnum){
-        logger.error("code = %{} ,msg = %{}", statusEnum.getCode(), statusEnum.getMsg());
+        logger.error("code = %{} ,msg = %{}", statusEnum.getValue(), statusEnum.getLabel());
         this.statusEnum = statusEnum;
-        this.code = statusEnum.getCode();
-        this.errorMsg = statusEnum.getMsg();
+        this.code = statusEnum.getValue();
+        this.errorMsg = statusEnum.getLabel();
     }
 
     public BusinessException(String code,String errorMsg){

@@ -1,0 +1,15 @@
+server:
+  port: 80
+logging:
+  file:
+    path: logs/
+    name: ${logging.file.path}webLog.log
+  charset:
+    console: UTF-8
+  level:
+    root: info
+    com:
+      gx: debug
+
+
+

@@ -1,14 +1,19 @@
 package cn.com.dictionary.controller;
 
-import cn.com.dictionary.common.response.ApiResultResponse;
-import cn.com.sge.dictionary.mapper.pojo.UserPojo;
+import cn.com.dictionary.common.utils.EncryptionUtil;
+import cn.com.dictionary.common.ApiResult;
+import cn.com.dictionary.mapper.pojo.UserPojo;
+import cn.com.dictionary.service.ILoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
 
 /**
  * @author gejj
@@ -19,18 +24,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
+
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+    @Autowired
+    private ILoginService loginApiService;
+    /**
+     * 用户登录接口
+     * @param username
+     * @param password
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/doLogin",method = RequestMethod.POST)
-    public ApiResultResponse doLogin(@ModelAttribute("username") String username, @ModelAttribute("password") String password){
-        logger.info("%d {yyyy-MM-dd HH：mm：ss} 用户登录：${}",username);
-        ApiResultResponse result = new ApiResultResponse<UserPojo>();
+    public ApiResult doLogin(@ModelAttribute("username") String username, @ModelAttribute("password") String password){
+        logger.info("%d {yyyy-MM-dd HH：mm：ss} 用户 {} 登录",username);
+        //通过解密工具解密前端加密密码
 
-        UserPojo user = new UserPojo();
-        user.setUsername("1234");
-        user.setPassword("12345");
-        user.setStatus(1);
-        result.setData(user);
+        //通过加密工具加密用户密码
+        password = EncryptionUtil.passwordEncrypt(password);
+        ApiResult<UserPojo> result = loginApiService.authenticate(username, password);
+
         return result;
     }
 }
