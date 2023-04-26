@@ -1,14 +1,15 @@
-package cn.com.dictionary.utils.enumdata;
-
-import cn.com.dictionary.utils.AbstractEnum;
+package cn.com.dictionary.common.enumdata;
 
 /**
  * @author gejj
  * @package cn.com.dictionary.enumdata
  * @data 2023/4/19 16:45
  */
-public enum StatusEnum implements AbstractEnum {
+public enum ResultCodeEnum implements AbstractEnum {
     SUCCESS("200","请求成功！"),
+    FAIL("201","操作失败"),
+    SERVER_ERROR("202","服务器异常"),
+
     // 400
     BAD_REQUEST("400", "请求数据格式不正确!"),
     UNAUTHORIZED("401", "登录凭证过期!"),
@@ -22,7 +23,7 @@ public enum StatusEnum implements AbstractEnum {
     // 自定义
     IS_NOT_NULL("10001","%s不能为空");
 
-    StatusEnum(String value, String label) {
+    ResultCodeEnum(String value, String label) {
         this.value = value;
         this.label = label;
     }

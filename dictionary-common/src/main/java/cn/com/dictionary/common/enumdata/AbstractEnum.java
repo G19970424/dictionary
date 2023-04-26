@@ -1,4 +1,4 @@
-package cn.com.dictionary.utils;
+package cn.com.dictionary.common.enumdata;
 
 /**
  * @author gejj
