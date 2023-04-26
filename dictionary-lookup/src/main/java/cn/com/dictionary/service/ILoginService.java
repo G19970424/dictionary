@@ -1,7 +1,6 @@
 package cn.com.dictionary.service;
 
-import cn.com.dictionary.common.ApiResult;
-import cn.com.dictionary.mapper.pojo.UserPojo;
+import cn.com.dictionary.dao.pojo.User;
 
 /**
  * @author gejj
@@ -15,5 +14,5 @@ public interface ILoginService {
      * @param password
      * @return
      */
-    ApiResult<UserPojo> authenticate(String username, String password);
+    User authenticate(String username, String password);
 }

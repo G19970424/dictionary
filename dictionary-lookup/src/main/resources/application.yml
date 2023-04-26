@@ -8,8 +8,20 @@ spring:
     username: root
     password: root
 
+logging:
+  file:
+    path: logs/
+    name: ${logging.file.path}webLog.log
+  charset:
+    console: UTF-8
+  level:
+    root: info
+    com:
+      gx: debug
+
 mybatis-plus:
-  type-aliases-package: cn.com.dictionary.mapper.pojo
+  type-aliases-package: cn.com.dictionary.mapper.dao.pojo
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:cn/com/dictionary/mapper/*.xml

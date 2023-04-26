@@ -1,6 +1,6 @@
-package cn.com.dictionary.mapper;
+package cn.com.dictionary.dao.mapper;
 
-import cn.com.dictionary.mapper.pojo.UserPojo;
+import cn.com.dictionary.dao.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -8,23 +8,23 @@ import java.util.List;
 
 /**
  * @author gejj
- * @package cn.com.dictionary.mapper
- * @data 2023/4/17 17:29
+ * @package cn.com.dictionary.dao
+ * @data 2023/4/25 16:13
  */
 @Mapper
-public interface IUserMapper {
+public interface UserMapper {
     /**
      * 获取所有用户
      * @return
      */
-    List<UserPojo> queryAll();
+    List<User> queryAll();
 
     /**
      * 通过用户名获取用户信息
      * @param username
      * @return
      */
-    UserPojo queryByUserName(@Param("username") String username);
+    User queryByUserName(@Param("username") String username);
 
 
     /**
@@ -36,22 +36,22 @@ public interface IUserMapper {
 
     /**
      * 新增用户
-     * @param userPojo
+     * @param user
      * @return
      */
-    void insert(UserPojo userPojo);
+    void insert(User user);
 
     /**
      * 修改用户
-     * @param userPojo
+     * @param user
      */
-    void update(UserPojo userPojo);
+    void update(User user);
 
     /**
      * 修改用户密码
      * @param password
      */
-    void updatePassword(@Param("username") String username,@Param("password") String password);
+    void updatePassword(@Param("username") String username, @Param("password") String password);
 
     /**
      * 修改用户状态

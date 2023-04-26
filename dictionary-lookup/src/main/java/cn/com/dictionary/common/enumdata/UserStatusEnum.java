@@ -1,6 +1,4 @@
-package cn.com.dictionary.utils.enumdata;
-
-import cn.com.dictionary.utils.AbstractEnum;
+package cn.com.dictionary.common.enumdata;
 
 /**
  * @author gejj

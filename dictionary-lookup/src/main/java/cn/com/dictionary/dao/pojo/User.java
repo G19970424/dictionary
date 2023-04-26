@@ -1,11 +1,11 @@
-package cn.com.dictionary.mapper.pojo;
+package cn.com.dictionary.dao.pojo;
 
 /**
  * @author gejj
- * @package cn.com.dictionary.mapper.pojo
- * @data 2023/4/17 17:26
+ * @package cn.com.dictionary.dao.pojo
+ * @data 2023/4/25 16:15
  */
-public class UserPojo {
+public class User {
     private String id;
     private String username;
     private String password;
@@ -41,14 +41,5 @@ public class UserPojo {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "UserPojo{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 }

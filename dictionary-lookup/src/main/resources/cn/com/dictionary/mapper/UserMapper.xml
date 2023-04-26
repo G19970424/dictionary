@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.dictionary.mapper.IUserMapper">
+<mapper namespace="cn.com.dictionary.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="cn.com.dictionary.mapper.pojo.UserPojo">
         <result column="T_TR_ID" jdbcType="VARCHAR" property="id"/>
         <result column="T_TR_USERNAME" jdbcType="VARCHAR" property="username"/>
