@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.dictionary.dao.mapper.SysMenuMapper">
+    <resultMap id="BaseResultMap" type="cn.com.dictionary.dao.pojo.RoleMenu">
+        <result column="T_TR_ID" jdbcType="INTEGER" property="id"/>
+        <result column="T_TR_ROLE_ID" jdbcType="INTEGER" property="roleId"/>
+        <result column="T_TR_MENU_ID" jdbcType="INTEGER" property="menuId"/>
+    </resultMap>
+
+    <sql id="BaseColumns">
+        t.T_TR_ID,
+        t.T_TR_ROLE_ID,
+        t.T_TR_MENU_ID
+    </sql>
+
+    <select id="queryAll">
+        select
+            <include refid="BaseColumns"/>
+        from T_TR_ROLE_MENU T
+    </select>
+</mapper>
