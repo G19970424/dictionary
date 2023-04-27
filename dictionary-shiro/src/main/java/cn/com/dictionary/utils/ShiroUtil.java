@@ -1,7 +1,7 @@
 package cn.com.dictionary.utils;
 
 import cn.com.dictionary.dao.pojo.RoleMenu;
-import cn.com.dictionary.service.ISysMenuService;
+import cn.com.dictionary.service.IMenuService;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @data 2023/4/25 17:36
  */
 public class ShiroUtil {
-    public static Map<String, String> getFilterChainDefinitionMap(ISysMenuService sysMenuService){
+    public static Map<String, String> getFilterChainDefinitionMap(IMenuService sysMenuService){
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         List<RoleMenu> roleMenus = sysMenuService.queryAll();
 

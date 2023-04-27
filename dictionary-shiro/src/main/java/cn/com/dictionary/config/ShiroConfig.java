@@ -3,7 +3,7 @@ package cn.com.dictionary.config;
 import cn.com.dictionary.filter.KickoutSessionControlFilter;
 import cn.com.dictionary.filter.RolesOrFilterAuthorizationFilter;
 import cn.com.dictionary.realm.Realm;
-import cn.com.dictionary.service.ISysMenuService;
+import cn.com.dictionary.service.IMenuService;
 import cn.com.dictionary.utils.ShiroUtil;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -13,6 +13,8 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author gejj
@@ -29,6 +32,9 @@ import java.util.LinkedHashMap;
  */
 @Configuration
 public class ShiroConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
+
     @Value("${spring.redis.host}")
     private String host;
     @Value("${spring.redis.password}")
@@ -41,7 +47,7 @@ public class ShiroConfig {
     private String database;
 
     @Autowired
-    private ISysMenuService sysMenuService;
+    private IMenuService menuService;
 
     /**
      * 拦截器配置
@@ -50,16 +56,22 @@ public class ShiroConfig {
      */
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager){
+        logger.info("Shiro config start!");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        //set security manager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        //login url
         shiroFilterFactoryBean.setLoginUrl("/login");
+        //Successfully logged in and redirected to link
         shiroFilterFactoryBean.setSuccessUrl("/");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+//        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         LinkedHashMap<String, Filter> filtersMap  = new LinkedHashMap<>();
         filtersMap.put("roleOrFilter", new RolesOrFilterAuthorizationFilter());
         filtersMap.put("kickout", kickoutSessionControlFilter());
         shiroFilterFactoryBean.setFilters(filtersMap);
-        ShiroUtil.getFilterChainDefinitionMap(sysMenuService);
+        Map<String, String> filterChainDefinitionMap = ShiroUtil.getFilterChainDefinitionMap(menuService);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        logger.info("shiro config success");
         return shiroFilterFactoryBean;
     }
 

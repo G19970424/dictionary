@@ -17,6 +17,7 @@ import java.util.LinkedList;
  * @author gejj
  * @package cn.com.dictionary.filter
  * @data 2023/4/25 17:31
+ * Restrict the number of people logging in to the same account at the same time
  */
 public class KickoutSessionControlFilter extends AccessControlFilter {
     //踢出后的地址
