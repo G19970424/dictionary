@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 /**
  * @author gejj
  * @data 2023/5/8 16:04
+ * 仅支持int/integer、double/Double、float/Float、String 数据类型
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
