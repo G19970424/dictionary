@@ -4,13 +4,23 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/dictionary?serverTimezone=UTC&Unicode=true&characterEncoding=utf-8&AllowPublicKeyRetrieval=True
+    url: jdbc:mysql://localhost:3306/dictionary_user?serverTimezone=UTC&Unicode=true&characterEncoding=utf-8&AllowPublicKeyRetrieval=True
     username: root
     password: root
   redis:
     port: 6379
     host: localhost
     timeout: 0
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+cn:
+  com:
+    dictionary:
+      session:
+        workerId: 1
+        dataCenterId: 1
 
 logging:
   file:
@@ -29,3 +39,4 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapperLocations: classpath*:cn/com/dictionary/mapper/*.xml
+

@@ -10,11 +10,11 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.ws.Action;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -79,7 +79,8 @@ public class AuthorizationRealm extends AuthorizingRealm{
             throw new ExcessiveAttemptsException();
         }
         String password = user.getPassword();
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getUsername(),password,getName());
+        ByteSource sourceSalt = ByteSource.Util.bytes(user.getSalt());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username,password,sourceSalt,getName());
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
         session.setAttribute("USER_SESSION", user);

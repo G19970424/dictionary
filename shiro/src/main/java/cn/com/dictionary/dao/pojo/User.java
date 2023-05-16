@@ -7,14 +7,24 @@ import java.io.Serializable;
  * @data 2023/5/15 16:26
  */
 public class User implements Serializable {
+
     private static final long serialVersionUID = -3456513675416484868L;
+
     private String id;
     private String username;
     private String password;
     private String sex;
+    private String salt;
     private int status;
     private int loginNumber;
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     public String getId() {
         return id;

@@ -31,7 +31,7 @@ public class RedisConfig {
      * redis 缓存管理器
      * @return
      */
-    @Bean
+    @Bean("redisCacheManager")
     public RedisCacheManager redisCacheManager(){
         RedisCacheManager manager = new RedisCacheManager();
         manager.setRedisManager(redisManager());
@@ -42,7 +42,7 @@ public class RedisConfig {
      * redis 管理器，用于配置redis信息
      * @return
      */
-    @Bean
+    @Bean("redisManager")
     public RedisManager redisManager(){
         RedisManager manager = new RedisManager();
         manager.setPort(port);
@@ -51,17 +51,14 @@ public class RedisConfig {
         return manager;
     }
 
-    /**
-     * session 管理器，主要使用redis
-     * @return
-     */
+
 
 
     /**
      * redis session dao层实现 配置
      * @return
      */
-    @Bean
+    @Bean("sessionDAO")
     public RedisSessionDAO redisSessionDao(){
         RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
         redisSessionDAO.setRedisManager(redisManager());

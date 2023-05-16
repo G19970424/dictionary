@@ -7,6 +7,7 @@
         <result column="T_TR_ID" jdbcType="VARCHAR" property="id"/>
         <result column="T_TR_USERNAME" jdbcType="VARCHAR" property="username"/>
         <result column="T_TR_PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="T_TR_SALT" jdbcType="VARCHAR" property="salt"/>
         <result column="T_TR_SEX" jdbcType="VARCHAR" property="sex"/>
         <result column="T_TR_STATUS" jdbcType="INTEGER" property="status"/>
         <result column="T_TR_LOGIN_ERROR_NUMBER" jdbcType="INTEGER" property="loginNumber"/>
@@ -31,6 +32,7 @@
         select
             T_TR_USERNAME,
             T_TR_PASSWORD,
+            T_TR_SALT,
             T_TR_SEX,
             T_TR_STATUS,
             T_TR_LOGIN_ERROR_NUMBER

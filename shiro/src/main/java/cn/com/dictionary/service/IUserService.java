@@ -16,4 +16,6 @@ public interface IUserService {
     Set<Role> queryUserRoles(String username);
 
     Set<Permission> queryUserPermission(String username);
+
+    void register(User user);
 }

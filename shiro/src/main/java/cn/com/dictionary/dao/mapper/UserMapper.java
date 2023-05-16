@@ -19,4 +19,6 @@ public interface UserMapper {
     Set<Role> queryUserRoles(@Param("username") String username);
 
     Set<Permission> queryUserPermission(@Param("username") String username);
+
+    void register(@Param("user") User user);
 }
