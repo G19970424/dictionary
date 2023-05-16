@@ -6,6 +6,8 @@ import cn.com.dictionary.common.utils.ResultUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,50 +30,54 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {
-    /**
-     * 如果身份验证失败请捕获  或其子类，常见的如：
-     * 具体请查看其继承关系；
-     * 对于页面的错误消息展示，最好使用如 “用户名 / 密码错误” 而不是 “用户名错误”/“密码错误”，防止一些恶意用户非法扫描帐号库；
-     */
-    //无权限
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(value = UnauthorizedException.class)
     public ApiResult handler(UnauthorizedException e){
+        logger.error("Unauthorized Exception");
         return ResultUtil.FAIL(6005);
     }
 
     //身份过期
     @ExceptionHandler(value = ExpiredCredentialsException.class)
     public ApiResult handler(ExpiredCredentialsException e){
+        logger.error("ExpiredCredential Exception");
         return ResultUtil.FAIL(6002);
     }
 
     //密码错误
     @ExceptionHandler(value = IncorrectCredentialsException.class)
     public ApiResult handler(IncorrectCredentialsException e){
+        logger.error("IncorrectCredential Exception");
         return ResultUtil.FAIL(6001);
     }
 
     //账号冻结
     @ExceptionHandler(value = LockedAccountException.class)
     public ApiResult handler(LockedAccountException e){
+        logger.error("LockedAccount Exception");
         return ResultUtil.FAIL(6003);
     }
 
     //用户未登录
     @ExceptionHandler(value = UnauthenticatedException.class)
     public ApiResult handler(UnauthenticatedException e){
+        logger.error("Unauthenticated Exception");
         return ResultUtil.FAIL(6006);
     }
 
     //登录次数超过3次
     @ExceptionHandler(value = ExcessiveAttemptsException.class)
     public ApiResult handler(ExcessiveAttemptsException e){
+        logger.error("ExcessiveAttempts Exception");
         return ResultUtil.FAIL(6004);
     }
 
     //Excel util Exception
     @ExceptionHandler(value = ExcelException.class)
     public ApiResult handler(ExcelException e){
+        logger.error("Excel Exception");
         return ResultUtil.FAIL(e.getMessage());
     }
 }
