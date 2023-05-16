@@ -20,8 +20,8 @@ logging:
       gx: debug
 
 mybatis-plus:
-  type-aliases-package: cn.com.dictionary.mapper.dao.pojo
+  type-aliases-package: cn.com.dictionary.dao.pojo
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath*:cn/com/dictionary/mapper/*.xml
+  mapperLocations: classpath*:cn/com/dictionary/mapper/*.xml

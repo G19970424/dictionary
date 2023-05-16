@@ -9,25 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dictionary-lookup</artifactId>
+    <artifactId>business</artifactId>
     <dependencies>
         <dependency>
             <groupId>cn.com.dictionary</groupId>
-            <artifactId>dictionary-common</artifactId>
+            <artifactId>common</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
-            <version>3.5.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
-            <scope>runtime</scope>
-        </dependency>
+
     </dependencies>
 
     <properties>
