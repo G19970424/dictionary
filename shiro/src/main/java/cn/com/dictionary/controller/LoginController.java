@@ -44,10 +44,15 @@ public class LoginController {
         return ResultUtil.SUCCESS("登录成功！",200);
     }
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/register",consumes = "application/json")
     public ApiResult register(@ApiParam(name = "user",value="用户注册",required = true) @RequestBody User user){
         userService.register(user);
         return ResultUtil.SUCCESS("注册成功！",200);
     }
 
+
+    @PostMapping(value = "/test")
+    public ApiResult test(){
+        return ResultUtil.SUCCESS("权限测试通过！");
+    }
 }

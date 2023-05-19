@@ -4,62 +4,136 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.dictionary.dao.mapper.UserMapper">
     <resultMap id="UserMap" type="cn.com.dictionary.dao.pojo.User">
-        <result column="T_TR_ID" jdbcType="VARCHAR" property="id"/>
-        <result column="T_TR_USERNAME" jdbcType="VARCHAR" property="username"/>
-        <result column="T_TR_PASSWORD" jdbcType="VARCHAR" property="password"/>
-        <result column="T_TR_SALT" jdbcType="VARCHAR" property="salt"/>
-        <result column="T_TR_SEX" jdbcType="VARCHAR" property="sex"/>
-        <result column="T_TR_STATUS" jdbcType="INTEGER" property="status"/>
-        <result column="T_TR_LOGIN_ERROR_NUMBER" jdbcType="INTEGER" property="loginNumber"/>
+        <result column="F_ID" jdbcType="VARCHAR" property="id"/>
+        <result column="F_USERNAME" jdbcType="VARCHAR" property="username"/>
+        <result column="F_PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="F_SALT" jdbcType="VARCHAR" property="salt"/>
+        <result column="F_SEX" jdbcType="VARCHAR" property="sex"/>
+        <result column="F_STATUS" jdbcType="INTEGER" property="status"/>
+        <result column="F_LOGIN_ERROR_NUMBER" jdbcType="INTEGER" property="loginNumber"/>
     </resultMap>
     <resultMap id="RoleMap" type="cn.com.dictionary.dao.pojo.Role">
-        <result column="T_TR_ID" jdbcType="VARCHAR" property="id"/>
-        <result column="T_TR_ROLE_NAME" jdbcType="VARCHAR" property="name"/>
-        <result column="T_TR_LOCKED" jdbcType="VARCHAR" property="locked"/>
-        <result column="T_TR_REMARK" jdbcType="VARCHAR" property="remark"/>
-        <result column="T_TR_STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="F_ID" jdbcType="VARCHAR" property="id"/>
+        <result column="F_ROLE_NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="F_LOCKED" jdbcType="VARCHAR" property="locked"/>
+        <result column="F_REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="F_STATUS" jdbcType="VARCHAR" property="status"/>
     </resultMap>
     <resultMap id="PermissionMap" type="cn.com.dictionary.dao.pojo.Permission">
-        <result column="T_TR_MENU_ID" jdbcType="VARCHAR" property="id"/>
-        <result column="T_TR_PARENT_ID" jdbcType="VARCHAR" property="parentId"/>
-        <result column="T_TR_MENU_NAME" jdbcType="VARCHAR" property="name"/>
-        <result column="T_TR_MENU_TYPE" jdbcType="VARCHAR" property="type"/>
-        <result column="T_TR_PATH" jdbcType="VARCHAR" property="url"/>
-        <result column="T_TR_REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="F_MENU_ID" jdbcType="VARCHAR" property="id"/>
+        <result column="F_PARENT_ID" jdbcType="VARCHAR" property="parentId"/>
+        <result column="F_MENU_NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="F_MENU_TYPE" jdbcType="VARCHAR" property="type"/>
+        <result column="F_PATH" jdbcType="VARCHAR" property="url"/>
+        <result column="F_REMARK" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
 
     <select id="queryUserByName" resultMap="UserMap">
         select
-            T_TR_USERNAME,
-            T_TR_PASSWORD,
-            T_TR_SALT,
-            T_TR_SEX,
-            T_TR_STATUS,
-            T_TR_LOGIN_ERROR_NUMBER
+            F_ID,
+            F_USERNAME,
+            F_PASSWORD,
+            F_SALT,
+            F_SEX,
+            F_STATUS,
+            F_LOGIN_ERROR_NUMBER
         from
             T_TR_USER
         where
-            T_TR_USERNAME = #{username}
+            F_USERNAME = #{username}
     </select>
 
-    <select id="queryUserRoles" resultMap="PermissionMap">
+    <select id="queryUserRoles">
         select
-            T_TR_ROLE_NAME,
+            T.F_ROLE_ID,
         from
-            T_TR_USER
+            T_TR_ROLE T
+        LEFT JOIN
+            T_TR_USER_ROLE T1 ON T1.F_ROLE_ID = T.F_ROLE_ID
+        LEFT JOIN
+            T_TR_USER T2 ON T2.F_USER_ID = T1.F_USER_ID
         where
-            T_TR_USERNAME = #{username}
+            T2.F_ID = #{id}
     </select>
 
-    <select id="queryUserPermission" resultMap="UserMap">
+    <select id="queryUserPermission">
         select
-            T_TR_MENU_ID,
-            T_TR_PARENT_ID,
-            T_TR_MENU_NAME,
-            T_TR_PATH
+            F_MENU_ID,
+            F_PARENT_ID,
+            F_MENU_NAME,
+            F_PATH
         from
-            T_TR_USER
+            T_TR_MENU T
+        LEFT JOIN
+            T_TR_ROLE_MENU T1 ON T1.F_MENU_ID = T.F_MENU_ID
+        LEFT JOIN
+            T_TR_USER_ROLE T2 ON T2.F_ROLE_ID = T1.F_ROLE_ID
+        LEFT JOIN
+            T_TR_USER T3 ON T3.F_USER_ID ON T2.F_USER_ID
         where
-            T_TR_USERNAME = #{username}
+            T.F_ID = #{id}
     </select>
+
+    <insert id="register" parameterType="cn.com.dictionary.dao.pojo.User">
+        INSERT INTO T_TR_USER
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                F_ID,
+                <if test="username != null">
+                    F_USERNAME,
+                </if>
+                <if test="password != null">
+                    F_PASSWORD,
+                </if>
+                <if test="sex != null">
+                    F_SEX,
+                </if>
+                <if test="salt != null">
+                    F_SALT,
+                </if>
+                <if test="createDate != null">
+                    F_CREATE_TIME,
+                </if>
+            </trim>
+            <trim prefix="values(" suffix=")" suffixOverrides=",">
+                #{id,jdbcType=VARCHAR},
+                <if test="username != null">
+                    #{username,jdbcType=VARCHAR},
+                </if>
+                <if test="password != null">
+                    #{password,jdbcType=VARCHAR},
+                </if>
+                <if test="sex != null">
+                    #{sex,jdbcType=TINYINT},
+                </if>
+                <if test="salt != null">
+                    #{salt,jdbcType=VARCHAR},
+                </if>
+                <if test="createDate != null">
+                    #{createDate,jdbcType=VARCHAR},
+                </if>
+            </trim>
+    </insert>
+
+    <select id="queryPermByRoleId" resultMap="PermissionMap">
+        select
+               *
+        from
+             T_TR_MENU T
+        LEFT JOIN
+            T_TR_ROLE_MENU T1 ON T.F_MENU_ID = T1.F_MENU_ID
+        LEFT JOIN
+            T_TR_ROLE T2 ON T2.F_ROLE_ID = T1.F_ROLE_ID
+        WHERE
+            T2.F_ROLE_ID = #{id}
+    </select>
+
+    <update id="updateUserInfo" parameterType="cn.com.dictionary.dao.pojo.User">
+        UPDATE
+            T_TR_USER T
+        SET
+            T.F_LAST_LOGIN_TIME = NOW(),
+            T.F_LOGIN_ERROR_NUMBER = 0
+        WHERE
+            T.F_ID = #{id,jdbcType=VARCHAR}
+    </update>
 </mapper>

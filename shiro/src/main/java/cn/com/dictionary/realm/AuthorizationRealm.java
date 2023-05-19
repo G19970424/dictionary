@@ -1,6 +1,9 @@
 package cn.com.dictionary.realm;
 
+import cn.com.dictionary.dao.pojo.Permission;
 import cn.com.dictionary.dao.pojo.User;
+import cn.com.dictionary.dao.pojo.UserLoginLog;
+import cn.com.dictionary.service.IAuditLogService;
 import cn.com.dictionary.service.IUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -15,8 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author gejj
@@ -28,6 +30,10 @@ public class AuthorizationRealm extends AuthorizingRealm{
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IAuditLogService auditLogService;
+
     /**
      * 用户授权
      *      1.验证用户权限。
@@ -42,15 +48,18 @@ public class AuthorizationRealm extends AuthorizingRealm{
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
         User user =(User) session.getAttribute("USER_SESSION");
-        Set<String> roleSet = new HashSet<>();
-        Set<String> permissionSet = new HashSet<>();
-
-        userService.queryUserRoles(user.getUsername()).forEach(role->roleSet.add(role.getName()));
-        userService.queryUserPermission(user.getUsername()).forEach(permission -> permissionSet.add(permission.getName()));
-
-        info.setRoles(roleSet);
-        info.setStringPermissions(permissionSet);
-        return info;
+        if(user != null){
+            //获取用户角色
+            userService.queryUserRoles(user.getId()).forEach(role->{
+                info.addRole(role.getName());
+                List<Permission> perm = userService.queryPermByRoleId(role.getId());
+                if(!perm.isEmpty()){
+                    perm.forEach(p ->{info.addStringPermission(p.getName());});
+                }
+            });
+            return info;
+        }
+        return null;
     }
 
     /**
@@ -65,25 +74,51 @@ public class AuthorizationRealm extends AuthorizingRealm{
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         logger.info("用户认证");
         String username = (String) authenticationToken.getPrincipal();
+        String password = new String((char[]) authenticationToken.getCredentials());
         User user = userService.queryUserByName(username);
 
+        //判断用户是否存在
         if(user == null){
-            throw new IncorrectCredentialsException();
+            throw new UnknownAccountException();
         }
 
+        //记录登录日志
+        UserLoginLog userLoginLog = new UserLoginLog();
+        userLoginLog.setUserId(user.getId());
+
+        //根据用户id 获取近10分钟登录失败次数
+
+        int loginNumber = auditLogService.queryLoginNumber(user.getId());
+        //判断用户十分钟内登陆失败次数
+        //十分钟内 登录失败次数 大于等于3 限制登录
+        if(loginNumber >= 3){
+            throw new ExcessiveAttemptsException();
+        }
+
+        //判断用户是否被冻结
         if(user.getStatus() == -1){
             throw new LockedAccountException();
         }
 
-        if(user.getLoginNumber() > 3){
-            throw new ExcessiveAttemptsException();
+        //判断用户密码
+        if(!password.equals(user.getPassword())){
+            userLoginLog.setStatus(false);
+            auditLogService.insert(userLoginLog);
+            throw new IncorrectCredentialsException();
         }
-        String password = user.getPassword();
+
+        //登录成功
+        String dbPassword = user.getPassword();
         ByteSource sourceSalt = ByteSource.Util.bytes(user.getSalt());
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username,password,sourceSalt,getName());
+        //保存用户信息
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username,dbPassword,sourceSalt,getName());
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
         session.setAttribute("USER_SESSION", user);
+
+        //记录用户登录信息
+        userLoginLog.setStatus(true);
+        auditLogService.insert(userLoginLog);
         return info;
     }
 }

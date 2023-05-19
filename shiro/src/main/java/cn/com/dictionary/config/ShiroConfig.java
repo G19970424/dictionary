@@ -71,11 +71,14 @@ public class ShiroConfig {
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
 
         //设置未登录界面
-        shiroFilter.setLoginUrl("/user/login");
+        shiroFilter.setLoginUrl("/user/login.html");
         //登录成功跳转页面
-        shiroFilter.setSuccessUrl("/user/main");
+        shiroFilter.setSuccessUrl("/user/main.html");
         shiroFilter.setFilters(filterMap);
-
+        filterChainDefinitionMap.put("/user/login", "anon");
+        filterChainDefinitionMap.put("/css/**", "anon");
+        filterChainDefinitionMap.put("/js/**", "anon");
+        filterChainDefinitionMap.put("/images/**","anon");
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilter.setFilterChainDefinitionMap(filterChainDefinitionMap);
         logger.info("======shiro set success======");
