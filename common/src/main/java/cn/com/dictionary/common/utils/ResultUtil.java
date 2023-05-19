@@ -29,7 +29,14 @@ public class ResultUtil {
         apiResult.setSuccess(true);
         return apiResult;
     }
-
+    public static ApiResult SUCCESS(Object data,int code){
+        ApiResult apiResult = new ApiResult();
+        apiResult.setData(data);
+        apiResult.setCode(code);
+        apiResult.setDate(new Date());
+        apiResult.setSuccess(true);
+        return apiResult;
+    }
     public static ApiResult SUCCESS(String msg,int code){
         ApiResult apiResult = new ApiResult();
         apiResult.setMessage(msg);

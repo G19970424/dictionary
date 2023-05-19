@@ -9,7 +9,7 @@ public enum ApiCode {
     SUCCESS(200, "操作成功"),
     NOT_PERMISSION(403, "没有权限"),
     NOT_FOUND(404, "你请求的资源不存在"),
-    FAIL(500, "操作失败"),
+    FAIL(500, "服务器异常！"),
     LOGIN_EXCEPTION(4000, "登陆失败"),
     SYSTEM_EXCEPTION(5000, "系统异常"),
     /** 参数校验级Code: 5001 - 6000 */
@@ -19,14 +19,18 @@ public enum ApiCode {
     USER_TWO_PASSWORDS_INCONSISTENT(6002, "两次输入密码不一致"),
     USER_ACCOUNT_REGISTERED(6003, "该账号已被注册"),
 
-    /** 登录异常状态码 */
-    PASSWORD_ERROR(6001,"用户名/密码错误"),
+    /** 用户登录异常状态码 */
+    PASSWORD_ERROR(6001,"用户名/密码错误！"),
     IDENTITY_EXPIRED(6002,"登录身份过期！"),
     LOCKED_ACCOUNT(6003,"账号已被冻结！"),
     EXCESSIVE_ATTEMPTS(6004,"登录次数过多，请稍后登录！"),
-    UNAUTHORIZED(6005,"无权访问"),
-    UNAUTHENTICATED(6006,"用户未登录！")
+    UNAUTHORIZED(6005,"无权访问！"),
+    UNAUTHENTICATED(6006,"用户未登录！"),
+    UNKNOWN_ACCOUNT(6007,"用户名/密码错误！"),
     /** 登录异常状态码 */
+    /** 用户注册异常状态码*/
+    ACCOUNT_ALREADY_EXISTS(6101,"用户已存在，请重新选择用户名！")
+    /** 用户注册异常状态码*/
     ;
     private final int code;
     private final String msg;
