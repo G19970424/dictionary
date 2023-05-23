@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.dictionary.dao.mapper.AuditLogMapper">
+    <resultMap id="UserLogMap" type="cn.com.dictionary.dao.pojo.UserLoginLog">
+        <result column="F_ID" jdbcType="VARCHAR" property="id"/>
+        <result column="F_USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="F_LOGIN_TIME" jdbcType="DATE" property="date"/>
+        <result column="F_LOGIN_STATUS" jdbcType="VARCHAR" property="status"/>
+    </resultMap>
+
+    <select id="queryLoginNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM t_tr_user_login_log
+        WHERE f_login_time >= DATE_SUB(NOW(), INTERVAL 10 MINUTE) and f_login_status = 0 and f_user_id = #{id,jdbcType=VARCHAR};
+    </select>
+
+    <insert id="insert" parameterType="cn.com.dictionary.dao.pojo.UserLoginLog">
+        INSERT INTO T_TR_USER_LOGIN_LOG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            F_ID,
+            <if test="userId != null">
+                F_USER_ID,
+            </if>
+            <if test="date != null">
+                F_LOGIN_TIME,
+            </if>
+            <if test="status != null">
+                F_LOGIN_STATUS,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="date != null">
+                #{date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+</mapper>

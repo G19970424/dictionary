@@ -1,0 +1,58 @@
+server:
+  port: 8433
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dictionary_user?serverTimezone=UTC&Unicode=true&characterEncoding=utf-8&AllowPublicKeyRetrieval=True
+    username: root
+    password: root
+    #数据连接池配置
+    hikari:
+      minimum-idle: 1 #最小连接数
+      maximum-pool-size: 5 #最大连接数
+      pool-name: DataSourceHikariCP #连接池名
+      max-lifetime: 1800000 #连接生命时长
+      connection-test-query: SELECT 1
+      idle-timeout: 600000
+      connection-timeout: 30000
+  #redis 配置
+  redis:
+    port: 6379
+    host: localhost
+    timeout: 0
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  application:
+    name: Authorization
+
+
+#日志打印配置
+logging:
+  file:
+    path: /logs/shiro/
+    name: ${logging.file.path}/${spring.application.name}.log
+  charset:
+    console: UTF-8
+  level:
+    root: info
+    com:
+
+      gx: debug
+  pattern:
+    #[时间戳] [日志级别] [类名.方法名] [消息文本]
+    console:  '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+    file:  '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+
+
+#mybatis-plus配置
+mybatis-plus:
+  type-aliases-package: cn.com.dictionary.dao.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+  mapperLocations: classpath*:cn/com/dictionary/mapper/*.xml
+  global-config:
+    db-config:
+      id-type: assign_uuid
+
