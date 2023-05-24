@@ -27,6 +27,7 @@ public enum ApiCode {
     UNAUTHORIZED(6005,"无权访问！"),
     UNAUTHENTICATED(6006,"用户未登录！"),
     UNKNOWN_ACCOUNT(6007,"用户名/密码错误！"),
+    DisabledAccount(6008,"账号被锁定，请联系管理员！"),
     /** 登录异常状态码 */
     /** 用户注册异常状态码*/
     ACCOUNT_ALREADY_EXISTS(6101,"用户已存在，请重新选择用户名！")
