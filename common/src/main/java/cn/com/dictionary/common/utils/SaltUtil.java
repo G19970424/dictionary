@@ -26,6 +26,10 @@ public class SaltUtil {
         return getSalt(length);
     }
 
+    /**
+     * 随机盐使用方法
+     * @param args
+     */
     public static void main(String[] args) {
         String salt = SaltUtil.getSalt();
         System.out.println(salt);
