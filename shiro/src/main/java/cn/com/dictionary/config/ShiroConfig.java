@@ -9,6 +9,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -18,6 +19,7 @@ import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +50,7 @@ public class ShiroConfig {
     @Autowired
     @Qualifier("redisCacheManager")
     private RedisCacheManager redisCacheManager;
+
     /**
      * shiro 拦截器，实现权限相关拦截
      * 常用过滤器
@@ -71,11 +74,12 @@ public class ShiroConfig {
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
 
         //设置未登录界面
-        shiroFilter.setLoginUrl("/user/login.html");
+        shiroFilter.setLoginUrl("/login/main.html");
         //登录成功跳转页面
         shiroFilter.setSuccessUrl("/user/main.html");
         shiroFilter.setFilters(filterMap);
-        filterChainDefinitionMap.put("/user/login", "anon");
+        filterChainDefinitionMap.put("/login/main", "anon");
+        filterChainDefinitionMap.put("/login/register", "anon");
         filterChainDefinitionMap.put("/css/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/images/**","anon");
@@ -102,6 +106,8 @@ public class ShiroConfig {
         return defaultWebSecurity;
     }
 
+
+
     /**
      * session 管理器，主要使用redis
      * @return
@@ -117,9 +123,9 @@ public class ShiroConfig {
      * @return
      */
     @Bean("realm")
-    public AuthorizingRealm realm(@Qualifier("hashedCredentialsMatcher") CredentialsMatcher hashedCredentialsMatcher){
+    public AuthorizingRealm realm(@Qualifier("hashedCredentialsMatcher") CredentialsMatcher matcher){
         AuthorizationRealm realm = new AuthorizationRealm();
-        realm.setCredentialsMatcher(hashedCredentialsMatcher);
+        realm.setCredentialsMatcher(matcher);
         return realm;
     }
 
@@ -136,8 +142,22 @@ public class ShiroConfig {
      * shiro 生命周期处理器
      * @return
      */
+//    @Bean
+//    public static LifecycleBeanPostProcessor getLifecycleBeanProcessor(){
+//        return new LifecycleBeanPostProcessor();
+//    }
+
+    @Bean("authorizationAdvisor")
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(@Qualifier("securityManager")SecurityManager securityManager){
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
+    }
+
     @Bean
-    public static LifecycleBeanPostProcessor getLifecycleBeanProcessor(){
-        return new LifecycleBeanPostProcessor();
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+        return defaultAdvisorAutoProxyCreator;
     }
 }
