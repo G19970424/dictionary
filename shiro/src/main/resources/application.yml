@@ -25,6 +25,8 @@ spring:
       matching-strategy: ant_path_matcher
   application:
     name: Authorization
+  aop:
+    proxy-target-class: true
 
 
 #日志打印配置
@@ -37,22 +39,21 @@ logging:
   level:
     root: info
     com:
-
       gx: debug
   pattern:
     #[时间戳] [日志级别] [类名.方法名] [消息文本]
     console:  '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
     file:  '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
 
-
 #mybatis-plus配置
 mybatis-plus:
   type-aliases-package: cn.com.dictionary.dao.pojo
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapperLocations: classpath*:cn/com/dictionary/mapper/*.xml
   global-config:
     db-config:
+      table-prefix: t_tr_
       id-type: assign_uuid
 
