@@ -1,82 +1,68 @@
 package cn.com.dictionary.service.impl;
 
-import cn.com.dictionary.common.GlobalException;
-import cn.com.dictionary.common.enumdata.EncryptionEnum;
+import cn.com.dictionary.common.exception.RegisterException;
+import cn.com.dictionary.common.utils.IdGeneratorUtil;
 import cn.com.dictionary.common.utils.SaltUtil;
 import cn.com.dictionary.dao.mapper.UserMapper;
-import cn.com.dictionary.dao.pojo.Permission;
-import cn.com.dictionary.dao.pojo.Role;
 import cn.com.dictionary.dao.pojo.User;
 import cn.com.dictionary.service.IUserService;
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author gejj
- * @data 2023/5/15 16:25
+ * @data 2023/5/24 13:49
  */
 @Service
-@Transactional
 public class UserServiceImpl implements IUserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Override
-    public User queryUserByName(String username) {
-        User user = userMapper.queryUserByName(username);
-        return user;
+    public User queryByName(String userName) {
+        return userMapper.queryByName(userName);
     }
 
     @Override
-    public Set<Role> queryUserRoles(String id) {
-        Set<Role> roles = userMapper.queryUserRoles(id);
-        for (Role role : roles) {
-            logger.info(role.toString());
-        }
-        return roles;
+    public User queryById(String id) {
+        return userMapper.queryById(id);
     }
 
-    @Override
-    public Set<Permission> queryUserPermission(String id) {
-        Set<Permission> permissions = userMapper.queryUserPermission(id);
-        for (Permission permission : permissions) {
-            logger.info(permission.toString());
-        }
-        return permissions;
-    }
-
+    /**
+     * 用于用户自行注册，注册用户需要内部用户审核，方可进行登录使用
+     * @param user
+     */
     @Override
     public void register(User user) {
-        //获取密码
-        String password = user.getPassword();
+        //判断用户是否存在 存在则注册失败
+        User oldUser = userMapper.queryByName(user.getUsername());
+        if(oldUser != null){
+            logger.error("[Register Error] {} 用户存在，注册失败！",user.getUsername());
+            throw new RegisterException("用户名已存在，请修改用户名！");
+        }
+        //生成用户唯一id
+        String id = IdGeneratorUtil.getInstance().getId();
+        oldUser = userMapper.queryById(id);
+        if(oldUser != null){
+            logger.error("[Register Error] id：{} 生成失败 ！",id);
+            throw new RegisterException("注册失败！");
+        }
+        user.setId(id);
         //生成随机盐
         String salt = SaltUtil.getSalt();
-        ByteSource bytes = ByteSource.Util.bytes(salt);
-        //加密后密码
-        String newPass = new SimpleHash(EncryptionEnum.MD5.getValue(), password, salt, 8).toHex();
         user.setSalt(salt);
-        user.setPassword(newPass);
-        User oldUser = userMapper.queryUserByName(user.getUsername());
-        if(oldUser != null){
-            throw new GlobalException("用户名已存在，请重新选择用户名！", 400);
-        }
-        userMapper.register(user);
+        //生成加密密码
+        String newPassword = new SimpleHash("MD5", "admin", salt, 8).toHex();
+        user.setPassword(newPassword);
+        //由于改注册接口通过外部注册，需要内部用户审核通过，赋予权限。
+        user.setStatus(false);
+        user.setLock(false);
+        userMapper.insert(user);
     }
-
-    @Override
-    public List<Permission> queryPermByRoleId(String id) {
-        return userMapper.queryPermByRoleId(id);
-    }
-
 }

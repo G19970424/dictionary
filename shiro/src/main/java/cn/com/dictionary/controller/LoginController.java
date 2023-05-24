@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Api(value = "Login|登录控制器")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/login")
 public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -33,7 +33,7 @@ public class LoginController {
     private IUserService userService;
 
     @ApiOperation(value = "用户登录接口",notes = "提供账号和密码")
-    @PostMapping(value = "/login",consumes = "application/json")
+    @PostMapping(value = "/main",consumes = "application/json")
     public ApiResult login(@ApiParam(name="user",value = "用户登录",required = true)@RequestBody User user){
         logger.info("用户登录：{}",user.getUsername());
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
@@ -44,15 +44,11 @@ public class LoginController {
         return ResultUtil.SUCCESS("登录成功！",200);
     }
 
+    @ApiOperation(value = "用户注册",notes = "提供账号和密码")
     @PostMapping(value = "/register",consumes = "application/json")
     public ApiResult register(@ApiParam(name = "user",value="用户注册",required = true) @RequestBody User user){
         userService.register(user);
         return ResultUtil.SUCCESS("注册成功！",200);
     }
 
-
-    @PostMapping(value = "/test")
-    public ApiResult test(){
-        return ResultUtil.SUCCESS("权限测试通过！");
-    }
 }
