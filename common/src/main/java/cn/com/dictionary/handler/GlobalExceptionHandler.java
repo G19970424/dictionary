@@ -2,6 +2,7 @@ package cn.com.dictionary.handler;
 
 import cn.com.dictionary.common.GlobalException;
 import cn.com.dictionary.common.exception.ExcelException;
+import cn.com.dictionary.common.exception.RegisterException;
 import cn.com.dictionary.common.result.ApiResult;
 import cn.com.dictionary.common.utils.ResultUtil;
 import org.apache.shiro.authc.*;
@@ -9,6 +10,7 @@ import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,6 +36,12 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(value = DisabledAccountException.class)
+    public ApiResult handler(DisabledAccountException e){
+        logger.error("Disabled Account Exception:{}" ,e.getMessage());
+        return ResultUtil.FAIL(6008);
+    }
+
     @ExceptionHandler(value = UnauthorizedException.class)
     public ApiResult handler(UnauthorizedException e){
         logger.error("Unauthorized Exception:{}" ,e.getMessage());
@@ -43,7 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = UnknownAccountException.class)
     public ApiResult handler(UnknownAccountException e){
         logger.error("Unknown Account Exception:{}" ,e.getMessage());
-        return ResultUtil.FAIL(6005);
+        return ResultUtil.FAIL(6001);
     }
 
     //身份过期
@@ -98,5 +106,10 @@ public class GlobalExceptionHandler {
     public ApiResult handler(Exception e){
         logger.error(e.getMessage());
         return ResultUtil.FAIL(500);
+    }
+
+    @ExceptionHandler(value = RegisterException.class)
+    public ApiResult handler(RegisterException e){
+        return ResultUtil.FAIL(e.getMessage());
     }
 }
